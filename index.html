@@ -7,6 +7,21 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html, body { height: 100%; }
+
+    /* Kalp animasyonu */
+    .heart {
+      position: fixed;
+      color: #ff5fa2;
+      font-size: 24px;
+      animation: fall linear forwards;
+      pointer-events: none;
+      filter: drop-shadow(0 0 8px #ff1b8d);
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-10vh) scale(1); opacity: 1; }
+      100% { transform: translateY(110vh) scale(1.8); opacity: 0; }
+    }
   </style>
 </head>
 
@@ -58,12 +73,13 @@
         class="px-5 py-3 rounded-2xl bg-green-600 hover:bg-green-500 shadow-lg font-semibold">
         Marul Kafayı aramak için tıkla 📞
       </a>
-      <p>Kurumsal iletişim için adnanozen78@gmail.com adresine mail atabilirsiniz. hehehe yerse</p>
+
+     
     </div>
   </section>
 
   <script>
-    /* KAÇAN BUTON */
+    /* Kaçan SG Butonu */
     function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
     function makeEscapist(el) {
       const move = () => {
@@ -74,7 +90,7 @@
         el.style.position = "fixed";
         el.style.left = left + "px";
         el.style.top = top + "px";
-        /* SG butona dokunulunca alarm çal */
+
         alarmSound.currentTime = 0;
         alarmSound.play().catch(()=>{});
       };
@@ -82,7 +98,7 @@
       el.addEventListener("touchstart", e => { e.preventDefault(); move(); });
     }
 
-    /* ELEMANLAR */
+    /* Elementler */
     const yesBtn = document.getElementById("yesBtn");
     const escapeBtn = document.getElementById("escapeBtn");
     const mainView = document.getElementById("mainView");
@@ -90,7 +106,7 @@
     const finalImg1 = document.getElementById("finalImg1");
     const finalImg2 = document.getElementById("finalImg2");
 
-    /* SESLER */
+    /* Sesler */
     const bgMusic = new Audio("muzik1.mp3");
     bgMusic.loop = true;
 
@@ -99,29 +115,37 @@
 
     const alarmSound = new Audio("alarm.mp3");
 
-    /* Site açılırken müziği başlatmayı dene */
+    /* Müzik sadece ilk dokunuşta başlasın */
+    let firstInteraction = false;
+    function startBackgroundMusic() {
+      if (firstInteraction) return;
+      firstInteraction = true;
+      bgMusic.play().catch(()=>{});
+    }
+
     bgMusic.play().catch(()=> {
-      document.addEventListener("click", ()=> bgMusic.play(), { once:true });
-      document.addEventListener("touchstart", ()=> bgMusic.play(), { once:true });
+      document.addEventListener("click", startBackgroundMusic);
+      document.addEventListener("touchstart", startBackgroundMusic);
     });
 
-    /* SG PEZEVENK KAÇSIN ve alarm çalsın */
     makeEscapist(escapeBtn);
 
-    /* 2. EKRANA GEÇİŞ */
+    /* 2. AŞAMAYA GEÇİŞ */
     yesBtn.addEventListener("click", () => {
 
+      document.removeEventListener("click", startBackgroundMusic);
+      document.removeEventListener("touchstart", startBackgroundMusic);
+
       bgMusic.pause();
+      bgMusic.currentTime = 0;
+      bgMusic.src = "";
+
       loveMusic.currentTime = 0;
       loveMusic.play().catch(()=>{});
 
-      /* 1. ekranı tamamen kaldır */
       mainView.remove();
-
-      /* 2. ekranı aç */
       finalView.classList.remove("hidden");
 
-      /* Resim geçiş hızı */
       let showing = 1;
       setInterval(() => {
         if (showing === 1) {
@@ -133,7 +157,18 @@
           finalImg1.classList.remove("hidden");
           showing = 1;
         }
-      }, 1200); // 1.2 saniye
+      }, 1200);
+
+      /* ❤️ KALP YAĞMURU BAŞLAT */
+      setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (2 + Math.random() * 2) + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+      }, 150);
     });
   </script>
 
