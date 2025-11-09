@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aşkım Özür Dilerim 💖</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body { height: 100%; }
+  </style>
+</head>
+
+<body class="relative min-h-screen overflow-hidden text-white">
+
+  <!-- Arkaplan Video -->
+  <video id="bgVideo" class="fixed inset-0 w-full h-full object-cover -z-10"
+    src="arkaplan.mp4" autoplay loop muted playsinline></video>
+  <div class="fixed inset-0 bg-black/40 -z-10"></div>
+
+  <!-- 1. AŞAMA -->
+  <main id="mainView" class="flex min-h-screen items-center justify-center p-4">
+    <div class="max-w-xl w-full text-center select-none">
+      <h1 class="text-3xl sm:text-5xl font-extrabold drop-shadow-md">
+        Bitanecik Meleğimm özür dilerim🥺
+      </h1>
+
+      <p class="mt-4 text-base sm:text-lg text-white/90 drop-shadow">
+        Beni affeder misin?
+      </p>
+
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 items-center justify-center">
+        <button id="yesBtn"
+          class="px-6 py-3 rounded-2xl bg-pink-600 hover:bg-pink-500 shadow-lg font-semibold">
+          Tabiki aşkım, seni çok seviyorumm
+        </button>
+
+        <button id="escapeBtn"
+          class="px-6 py-3 rounded-2xl bg-gray-800/80 hover:bg-gray-700/90 shadow-lg border border-white/10 font-semibold relative">
+          SG pezevenk
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 2. AŞAMA -->
+  <section id="finalView" class="hidden fixed inset-0 flex flex-col items-center justify-center p-4">
+    <div class="w-full flex flex-col items-center gap-4 text-center">
+      <div class="relative w-full flex items-center justify-center">
+        <img id="finalImg1" src="adnan.png" class="max-w-[70vw] max-h-[60vh] object-contain" />
+        <img id="finalImg2" src="sude.png" class="max-w-[70vw] max-h-[60vh] object-contain hidden" />
+      </div>
+
+      <p class="text-2xl sm:text-3xl font-bold text-white drop-shadow">
+        Talebiniz iletildiii, Bende seni her şeyden çok seviyorum 🖤
+      </p>
+
+      <a href="tel:05431430078"
+        class="px-5 py-3 rounded-2xl bg-green-600 hover:bg-green-500 shadow-lg font-semibold">
+        Marul Kafayı aramak için tıkla 📞
+      </a>
+      <p>Kurumsal iletişim için adnanozen78@gmail.com adresine mail atabilirsiniz. hehehe yerse</p>
+    </div>
+  </section>
+
+  <script>
+    /* KAÇAN BUTON */
+    function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
+    function makeEscapist(el) {
+      const move = () => {
+        const cur = el.getBoundingClientRect();
+        const vw = window.innerWidth, vh = window.innerHeight;
+        let left = clamp(cur.left + (Math.random() * 200 - 100), 10, vw - cur.width - 10);
+        let top  = clamp(cur.top + (Math.random() * 200 - 100), 10, vh - cur.height - 10);
+        el.style.position = "fixed";
+        el.style.left = left + "px";
+        el.style.top = top + "px";
+        /* SG butona dokunulunca alarm çal */
+        alarmSound.currentTime = 0;
+        alarmSound.play().catch(()=>{});
+      };
+      el.addEventListener("click", e => { e.preventDefault(); move(); });
+      el.addEventListener("touchstart", e => { e.preventDefault(); move(); });
+    }
+
+    /* ELEMANLAR */
+    const yesBtn = document.getElementById("yesBtn");
+    const escapeBtn = document.getElementById("escapeBtn");
+    const mainView = document.getElementById("mainView");
+    const finalView = document.getElementById("finalView");
+    const finalImg1 = document.getElementById("finalImg1");
+    const finalImg2 = document.getElementById("finalImg2");
+
+    /* SESLER */
+    const bgMusic = new Audio("muzik1.mp3");
+    bgMusic.loop = true;
+
+    const loveMusic = new Audio("muzik2.mp3");
+    loveMusic.loop = true;
+
+    const alarmSound = new Audio("alarm.mp3");
+
+    /* Site açılırken müziği başlatmayı dene */
+    bgMusic.play().catch(()=> {
+      document.addEventListener("click", ()=> bgMusic.play(), { once:true });
+      document.addEventListener("touchstart", ()=> bgMusic.play(), { once:true });
+    });
+
+    /* SG PEZEVENK KAÇSIN ve alarm çalsın */
+    makeEscapist(escapeBtn);
+
+    /* 2. EKRANA GEÇİŞ */
+    yesBtn.addEventListener("click", () => {
+
+      bgMusic.pause();
+      loveMusic.currentTime = 0;
+      loveMusic.play().catch(()=>{});
+
+      /* 1. ekranı tamamen kaldır */
+      mainView.remove();
+
+      /* 2. ekranı aç */
+      finalView.classList.remove("hidden");
+
+      /* Resim geçiş hızı */
+      let showing = 1;
+      setInterval(() => {
+        if (showing === 1) {
+          finalImg1.classList.add("hidden");
+          finalImg2.classList.remove("hidden");
+          showing = 2;
+        } else {
+          finalImg2.classList.add("hidden");
+          finalImg1.classList.remove("hidden");
+          showing = 1;
+        }
+      }, 1200); // 1.2 saniye
+    });
+  </script>
+
+</body>
+</html>
